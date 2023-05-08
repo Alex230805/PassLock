@@ -17,19 +17,13 @@ public class SistemaControllo {
     ObjectInputStream inputBin;
     ObjectOutputStream outputBin;
 
-    private int dim = 30;
     private int current = 0;
 
 
     public SistemaControllo() throws NoSuchAlgorithmException{
-        registro = new ArrayList<>(dim);
-        registroChiavi = new ArrayList<>(dim);
-        registroIV = new ArrayList<>(dim);
-        for(int i=0;i<dim;i++){
-            registro.add(i, null);
-            registroChiavi.add(i, null);
-            registroIV.add(i, null);
-        }
+        registro = new ArrayList<>();
+        registroChiavi = new ArrayList<>();
+        registroIV = new ArrayList<>();
 
     }
     public void insertNode(String name, String password,String rePassword) throws NoSuchAlgorithmException, Exception{
@@ -116,6 +110,12 @@ public class SistemaControllo {
         }
     }
 
+    //metodo per recuperare la grandezza del vettore
+
+    public int getSize(){
+        return registro.size();
+    }
+
     //metodo per caricare dei dati dai file separati, implementare la serializzazione
     public void loadData(String destinationFile_1, String destinationFile_2,String destinationFile_3) throws ClassNotFoundException,FileNotFoundException,IOException{
         try{
@@ -123,13 +123,20 @@ public class SistemaControllo {
                 if(!destinationFile_2.equals(destinationFile_3)){
                     if(!destinationFile_3.equals(destinationFile_1)){
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_1));
-                        registro = (ArrayList<cella>)inputBin.readObject();
+                        if(inputBin.readObject() instanceof cella){
+                            registro = (ArrayList<cella>)inputBin.readObject();
+                        }
                         inputBin.close();
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_2));
-                        registroChiavi = (ArrayList<SecretKey>)inputBin.readObject();
+                        if(inputBin.readObject() instanceof SecretKey){
+                            registroChiavi = (ArrayList<SecretKey>)inputBin.readObject();
+                        }
+                        
                         inputBin.close();
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_3));
-                        registroIV = (ArrayList<IvParameterSpec>)inputBin.readObject();
+                        if(inputBin.readObject() instanceof IvParameterSpec){
+                            registroIV = (ArrayList<IvParameterSpec>)inputBin.readObject();
+                        }
                         inputBin.close();
                     }
                 }
@@ -184,10 +191,25 @@ public class SistemaControllo {
         byte[] plainText = cipher.doFinal(cipherText);
         return new String(plainText);
     }
+    public String byteToEx(byte[] e){
+        StringBuilder hexString = new StringBuilder(2 * e.length);
+        for(int i=0;i<e.length;i++){
+            String hex = Integer.toHexString(0xff & e[i]);
+            if(hex.length() == 1){
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     @Override
 
     //toString della lista
     public String toString(){
-        return registro.toString();
+        String man = "";
+        for(int i=0;i<registro.size();i++){
+            man += "\n\n----------------------\n"+registro.get(i).toString()+"\ncella: "+i+"\n----------------------\n\n";
+        }
+        return man;
     }
 }

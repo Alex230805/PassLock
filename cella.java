@@ -25,6 +25,6 @@ public class cella {
     @Override
 
     public String toString(){
-        return "Nome: "+nome+"Password Oscurata: "+EncryptedPassword+"\n";
+        return "Nome: "+nome+"\nPassword Oscurata: "+EncryptedPassword;
     }
 }
