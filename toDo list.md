@@ -7,17 +7,14 @@ description: toDo list di cose da aggiungere e appunti
 
 #Cose da aggiungere che mancano:
 
-0 - Concludere il Main
-
-
-1 - Tenere traccia della quantità di oggetti quando si carica da file esterni
-
-
-2 - ToString da peerfezionare per poter migliorare la stampa con un ciclo For, utilizzare come limite la qauntità di oggetti presenti(o un forEach)
-
+0 - Change the serializable info of cell, byte adress should be swapped with the correct value of that information in memory.
+    So when the SW create a new cell, the method in SW system must be changed to write the correct value of that memory adress.
+    In the method in SW system for encrypting and decrypting data is based on the adress memory for safety, now when a cell is created the 
+    byte's value must be :
+    1 - swapped with a phisical data
+    2 - when the user whant to decrypt a message, the decrypting method must convert the data in a reliable data, tath can be processed for decryption.
 
 3 - Manca l'ordinamento della lista quando si aggiunge qualcosa, quando la si elimina e quando si sposta o modifica
-
 
 4 - aggiungere un layer di sicurezza di livello avanzato per un certo tipo di password, particolarmente sensibili
         |
