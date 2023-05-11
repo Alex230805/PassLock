@@ -14,17 +14,16 @@ import java.io.*;
 public class SistemaControllo {
     private ArrayList<cella> registro;
     private ArrayList<SecretKey> registroChiavi;
-    private ArrayList<IvParameterSpec> registroIV;
     ObjectInputStream inputBin;
     ObjectOutputStream outputBin;
 
+    private byte[] iv = {6,2,0,7,8,2,5,6,7,9,2,9,2,8,6,9};
     private int current = 0;
 
 
     public SistemaControllo() throws NoSuchAlgorithmException{
         registro = new ArrayList<>();
         registroChiavi = new ArrayList<>();
-        registroIV = new ArrayList<>();
 
     }
     public void insertNode(String name, String password,String rePassword) throws NoSuchAlgorithmException, Exception{
@@ -34,12 +33,11 @@ public class SistemaControllo {
             if(password.compareTo(rePassword) == 0){
                 SecretKey secretKey = this.generateKey();
                 IvParameterSpec iv = this.generateIv();
-                byte[] encryptedText = this.encrypt(rePassword, secretKey, iv);
+                byte[] encryptedText = this.encrypt(rePassword, secretKey);
 
                 c = new cella(name, encryptedText);
                 registro.add(current,c);
                 registroChiavi.add(current,secretKey);
-                registroIV.add(current,iv);
                 stop = true;
                 current++;
                 //manca l'ordinamento
@@ -58,7 +56,6 @@ public class SistemaControllo {
     public void deleteNode(int i){
         registro.remove(i);
         registroChiavi.remove(i);
-        registroIV.remove(i);
         if(current-- < 0){
             current = 0;
         }
@@ -70,9 +67,7 @@ public class SistemaControllo {
     public boolean isFree(int i){
         if(registro.get(i) != null){
             if(registroChiavi.get(i) != null){
-                if(registroIV.get(i) != null){
                     return true;
-                }
             }   
         }
         return false;
@@ -89,15 +84,11 @@ public class SistemaControllo {
 
     //metodo per il salvataggio di dati su diversi file, implementare la serializzazione
 
-    public void serializeInfo(String destinationFile_1, String destinationFile_2,String destinationFile_3 ) throws IOException{
+    public void serializeInfo(String destinationFile_1, String destinationFile_2 ) throws IOException{
         cella[] cache = new cella[registro.size()];
         SecretKey[] cacheKey = new SecretKey[registroChiavi.size()];
-        IvParameterSpec[] cacheIV = new IvParameterSpec[registroIV.size()];
         try{
             if(!destinationFile_1.equals(destinationFile_2)){
-                if(!destinationFile_2.equals(destinationFile_3)){
-                    if(!destinationFile_3.equals(destinationFile_1)){
-
                         outputBin = new ObjectOutputStream(new FileOutputStream(destinationFile_1));
                         cache = registro.toArray(cache);
                         outputBin.writeObject(cache);
@@ -109,14 +100,6 @@ public class SistemaControllo {
                         outputBin.writeObject(cacheKey);
                         outputBin.flush();
                         outputBin.close();
-                        
-                        outputBin = new ObjectOutputStream(new FileOutputStream(destinationFile_3));
-                        cacheIV = registroIV.toArray(cacheIV);
-                        outputBin.writeObject(cacheIV); 
-                        outputBin.flush();
-                        outputBin.close();
-                    }
-                }
             }
         }catch(IOException ex){
             throw ex;
@@ -130,44 +113,25 @@ public class SistemaControllo {
     }
 
     //metodo per caricare dei dati dai file separati, implementare la serializzazione
-    public void loadData(String destinationFile_1, String destinationFile_2,String destinationFile_3) throws ClassNotFoundException,FileNotFoundException,IOException{
+    public void loadData(String destinationFile_1, String destinationFile_2) throws ClassNotFoundException,FileNotFoundException,IOException{
         cella[] cache;
         SecretKey[] cacheKey;
-        IvParameterSpec[] cacheIV;
         try{
             if(!destinationFile_1.equals(destinationFile_2)){
-                if(!destinationFile_2.equals(destinationFile_3)){
-                    if(!destinationFile_3.equals(destinationFile_1)){
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_1));
-                        if(inputBin.readObject() instanceof cella){
-                            cache = (cella[])inputBin.readObject();
-                            for(int i=0;i<cache.length;i++){
-                                registro.add(cache[i]);
-                            }
-                            cache = null;
+                        cache = (cella[])inputBin.readObject();
+                        for(int i=0;i<cache.length;i++){
+                            registro.add(cache[i]);
                         }
+                        cache = null;
                         inputBin.close();
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_2));
-                        if(inputBin.readObject() instanceof SecretKey){
-                            cacheKey = (SecretKey[])inputBin.readObject();
-                            for(int i=0;i<cacheKey.length;i++){
-                                registroChiavi.add(cacheKey[i]);
-                            }
-                            cacheKey = null;
-                        }
+                        cacheKey = (SecretKey[])inputBin.readObject();
+                        for(int i=0;i<cacheKey.length;i++){
+                            registroChiavi.add(cacheKey[i]);
+                         }
+                        cacheKey = null;
                         inputBin.close();
-                        inputBin = new ObjectInputStream(new FileInputStream(destinationFile_3));
-                        if(inputBin.readObject() instanceof IvParameterSpec){
-                            cacheIV = (IvParameterSpec[])inputBin.readObject();
-                            for(int i=0;i<cacheIV.length;i++){
-                                registroIV.add(cacheIV[i]);
-                            }
-                            cacheIV = null;
-                        }
-
-                        inputBin.close();
-                    }
-                }
             }
             current = 0;
 
@@ -184,11 +148,10 @@ public class SistemaControllo {
     //metodo per decriptare un nodo
     public String decryptNode(int i) throws Exception{
         SecretKey secretKey = registroChiavi.get(i);
-        IvParameterSpec iv = registroIV.get(i);
         byte[] text = registro.get(i).getEncryptedPassword();
         String decryptedKey = null;
         try{
-            decryptedKey = decrypt(text, secretKey, iv);
+            decryptedKey = decrypt(text, secretKey);
         }catch(Exception ex){
             throw ex;
         }
@@ -203,19 +166,16 @@ public class SistemaControllo {
         return gen.generateKey();
     }
     private IvParameterSpec generateIv(){
-        byte[] data = new byte[16];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(data);
-        return new IvParameterSpec(data);
+        return new IvParameterSpec(iv);
     }
-    private byte[] encrypt(String input, SecretKey key, IvParameterSpec iv) throws Exception{
+    private byte[] encrypt(String input, SecretKey key) throws Exception{
         Cipher cipher = Cipher.getInstance("AES/CFB8/NoPadding");
-        cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
         return cipher.doFinal(input.getBytes(StandardCharsets.UTF_8));
     }
-    private String decrypt(byte[] cipherText, SecretKey key, IvParameterSpec iv) throws Exception{
+    private String decrypt(byte[] cipherText, SecretKey key) throws Exception{
         Cipher cipher = Cipher.getInstance("AES/CFB8/NoPadding");
-        cipher.init(Cipher.DECRYPT_MODE, key, iv);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         byte[] plainText = cipher.doFinal(cipherText);
         return new String(plainText);
     }

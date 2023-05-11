@@ -1,4 +1,6 @@
-public class cella {
+import java.io.Serializable;
+
+public class cella implements Serializable{
     private String nome;
     private byte[] EncryptedPassword;
 

@@ -84,9 +84,7 @@ public class main {
                             let[0] = bufferReader.readLine();
                             System.out.print("Path to save the Key: ");
                             let[1] = bufferReader.readLine();
-                            System.out.print("Path to save the partial method: ");
-                            let[2] = bufferReader.readLine();
-                            sw.serializeInfo(let[0], let[1],let[2]);
+                            sw.serializeInfo(let[0], let[1]);
                             System.out.println(sw.toString()+"\n\n Archive successfuly saved! ..");
                             break;
                     case 6:
@@ -94,9 +92,7 @@ public class main {
                             let[0] = bufferReader.readLine();
                             System.out.print("Path to load the Key: ");
                             let[1] = bufferReader.readLine();
-                            System.out.print("Path to load the partial method: ");
-                            let[2] = bufferReader.readLine();
-                            sw.loadData(let[0], let[1],let[2]);
+                            sw.loadData(let[0], let[1]);
                             System.out.println(sw.toString()+"\n\n Archive successfuly loaded! ..");
                             break;
                     case 0:
