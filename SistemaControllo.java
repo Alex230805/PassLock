@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import java.io.*;
 
@@ -89,18 +90,30 @@ public class SistemaControllo {
     //metodo per il salvataggio di dati su diversi file, implementare la serializzazione
 
     public void serializeInfo(String destinationFile_1, String destinationFile_2,String destinationFile_3 ) throws IOException{
+        cella[] cache = new cella[registro.size()];
+        SecretKey[] cacheKey = new SecretKey[registroChiavi.size()];
+        IvParameterSpec[] cacheIV = new IvParameterSpec[registroIV.size()];
         try{
             if(!destinationFile_1.equals(destinationFile_2)){
                 if(!destinationFile_2.equals(destinationFile_3)){
                     if(!destinationFile_3.equals(destinationFile_1)){
+
                         outputBin = new ObjectOutputStream(new FileOutputStream(destinationFile_1));
-                        outputBin.writeObject(registro);
+                        cache = registro.toArray(cache);
+                        outputBin.writeObject(cache);
+                        outputBin.flush();
                         outputBin.close();
+
                         outputBin = new ObjectOutputStream(new FileOutputStream(destinationFile_2));
-                        outputBin.writeObject(registroChiavi);
+                        cacheKey = registroChiavi.toArray(cacheKey);
+                        outputBin.writeObject(cacheKey);
+                        outputBin.flush();
                         outputBin.close();
+                        
                         outputBin = new ObjectOutputStream(new FileOutputStream(destinationFile_3));
-                        outputBin.writeObject(registroIV);
+                        cacheIV = registroIV.toArray(cacheIV);
+                        outputBin.writeObject(cacheIV); 
+                        outputBin.flush();
                         outputBin.close();
                     }
                 }
@@ -118,25 +131,40 @@ public class SistemaControllo {
 
     //metodo per caricare dei dati dai file separati, implementare la serializzazione
     public void loadData(String destinationFile_1, String destinationFile_2,String destinationFile_3) throws ClassNotFoundException,FileNotFoundException,IOException{
+        cella[] cache;
+        SecretKey[] cacheKey;
+        IvParameterSpec[] cacheIV;
         try{
             if(!destinationFile_1.equals(destinationFile_2)){
                 if(!destinationFile_2.equals(destinationFile_3)){
                     if(!destinationFile_3.equals(destinationFile_1)){
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_1));
                         if(inputBin.readObject() instanceof cella){
-                            registro = (ArrayList<cella>)inputBin.readObject();
+                            cache = (cella[])inputBin.readObject();
+                            for(int i=0;i<cache.length;i++){
+                                registro.add(cache[i]);
+                            }
+                            cache = null;
                         }
                         inputBin.close();
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_2));
                         if(inputBin.readObject() instanceof SecretKey){
-                            registroChiavi = (ArrayList<SecretKey>)inputBin.readObject();
+                            cacheKey = (SecretKey[])inputBin.readObject();
+                            for(int i=0;i<cacheKey.length;i++){
+                                registroChiavi.add(cacheKey[i]);
+                            }
+                            cacheKey = null;
                         }
-                        
                         inputBin.close();
                         inputBin = new ObjectInputStream(new FileInputStream(destinationFile_3));
                         if(inputBin.readObject() instanceof IvParameterSpec){
-                            registroIV = (ArrayList<IvParameterSpec>)inputBin.readObject();
+                            cacheIV = (IvParameterSpec[])inputBin.readObject();
+                            for(int i=0;i<cacheIV.length;i++){
+                                registroIV.add(cacheIV[i]);
+                            }
+                            cacheIV = null;
                         }
+
                         inputBin.close();
                     }
                 }
