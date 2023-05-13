@@ -18,6 +18,7 @@ public class main {
             bufferReader = new BufferedReader(new InputStreamReader(System.in));
             sw = new SistemaControllo();
             while(start == 0){
+                ClearConsole();
                 menu();
                 selection = Integer.parseInt(bufferReader.readLine());
                 switch(selection){
@@ -30,9 +31,9 @@ public class main {
                             let[5] = bufferReader.readLine();
                             if(let[4].equals(let[5])){
                                 sw.insertNode(let[3],let[4],let[5]);
-                                System.out.println("Account signed successfuly ..");
+                                System.out.print("\n\nAccount signed successfuly ..");
                             }else{
-                                System.out.print("..Password are not equals .. Aborting operation");
+                                System.out.print("\n\n..Password are not equals .. Aborting operation");
                             }
                             let[3] = bufferReader.readLine();
                             resetBuffer(let);
@@ -47,7 +48,7 @@ public class main {
                             System.out.print(sw.toString()+"\n\nSelect the cell: ");
                             selection = Integer.parseInt(bufferReader.readLine());
                             if(!sw.isFree(selection)){
-                                System.out.println("There i no cell in the selected position .. Aborting");
+                                System.out.print("\n\nThere i no cell in the selected position .. Aborting");
                                 break;
                             }else{
                                 sw.deleteNode(selection);
@@ -61,7 +62,7 @@ public class main {
                             System.out.print(sw.toString()+"\n\nSelect the cell: ");
                             selection = Integer.parseInt(bufferReader.readLine());
                             if(selection > sw.getSize()){
-                                System.out.print("there is no existing cell in this position .. Aborting");
+                                System.out.print("\n\nthere is no existing cell in this position .. Aborting");
                                 break;
                             }
                             System.out.print("\nYout want to get the password for "+ sw.getCell(selection)+" ?  (Y/N): ");
@@ -73,7 +74,9 @@ public class main {
                                 byte[] sha256 = message.digest(let[3].getBytes(StandardCharsets.UTF_8));
                                 let[9] = sw.byteToEx(sha256);
                                 if(let[9].equalsIgnoreCase(sha256_original)){
-                                    System.out.print("Decrypted password: "+sw.decryptNode(selection)+".  ");
+                                    System.out.print("\n\nDecrypted password: "+sw.decryptNode(selection)+"  ");
+                                }else{
+                                    System.out.print("\n\nWrong password ... ");
                                 }
                                 
                             }
@@ -107,7 +110,7 @@ public class main {
                             start = 1;
                             break;
                     default:
-                            System.out.print("Wrong selection, retry.. ");
+                            System.out.print("\n\nWrong selection, retry.. ");
                             let[3] = bufferReader.readLine();
                             resetBuffer(let);
                             break;
@@ -131,6 +134,26 @@ public class main {
     public static void resetBuffer(String[] buffer){
         for(int i=0;i<buffer.length;i++){
             buffer[i] = null;
+        }
+    }
+    public static void ClearConsole(){
+        String op=null;
+        try{
+            op = new String(System.getProperty("os.name"));
+            if(op.contains("Windows")){
+                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
+                Process start = pb.inheritIO().start();
+                start.waitFor();
+
+            }else{
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                Process start = pb.inheritIO().start();
+                start.waitFor();
+            }
+        }catch(InterruptedException ex){
+                System.out.println(ex);
+        }catch(IOException ex){
+            System.out.println(ex);
         }
     }
 }
