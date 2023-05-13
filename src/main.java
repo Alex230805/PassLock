@@ -32,33 +32,36 @@ public class main {
                                 sw.insertNode(let[3],let[4],let[5]);
                                 System.out.println("Account signed successfuly ..");
                             }else{
-                                System.out.println("Password are not equals .. Aborting operation");
+                                System.out.print("..Password are not equals .. Aborting operation");
                             }
+                            let[3] = bufferReader.readLine();
                             resetBuffer(let);
                             break;
                     case 2:
                             System.out.println("Showing archive: ");
                             System.out.println(sw.toString());
+                            let[3] = bufferReader.readLine();
+                            resetBuffer(let);
                             break;
                     case 3:
                             System.out.print(sw.toString()+"\n\nSelect the cell: ");
                             selection = Integer.parseInt(bufferReader.readLine());
-                            if(selection > sw.getSize()){
+                            if(!sw.isFree(selection)){
                                 System.out.println("There i no cell in the selected position .. Aborting");
                                 break;
                             }else{
-                                if(!sw.isFree(selection)){
-                                    sw.deleteNode(selection);
-                                    System.out.println("Cell successfuly deleted");
-                                }
+                                sw.deleteNode(selection);
+                                System.out.print("\n\nCell successfuly deleted ..");
                             }
+                            let[3] = bufferReader.readLine();
+                            resetBuffer(let);
                             break;
 
                     case 4:
                             System.out.print(sw.toString()+"\n\nSelect the cell: ");
                             selection = Integer.parseInt(bufferReader.readLine());
                             if(selection > sw.getSize()){
-                                System.out.println("there is no existing cell in this position .. Aborting");
+                                System.out.print("there is no existing cell in this position .. Aborting");
                                 break;
                             }
                             System.out.print("\nYout want to get the password for "+ sw.getCell(selection)+" ?  (Y/N): ");
@@ -70,11 +73,12 @@ public class main {
                                 byte[] sha256 = message.digest(let[3].getBytes(StandardCharsets.UTF_8));
                                 let[9] = sw.byteToEx(sha256);
                                 if(let[9].equalsIgnoreCase(sha256_original)){
-                                    System.out.println("Decrypted password: "+sw.decryptNode(selection));
+                                    System.out.print("Decrypted password: "+sw.decryptNode(selection)+".  ");
                                 }
                                 
                             }
                             message = null;
+                            let[3] = bufferReader.readLine();
                             resetBuffer(let);
                             break;
                     case 5:
@@ -85,7 +89,9 @@ public class main {
                             System.out.print("Path to save the Key: ");
                             let[1] = bufferReader.readLine();
                             sw.serializeInfo(let[0], let[1]);
-                            System.out.println(sw.toString()+"\n\n Archive successfuly saved! ..");
+                            System.out.print(sw.toString()+"\n\n Archive successfuly saved! ..");
+                            let[3] = bufferReader.readLine();
+                            resetBuffer(let);
                             break;
                     case 6:
                             System.out.print("Path to load the File: ");
@@ -93,12 +99,17 @@ public class main {
                             System.out.print("Path to load the Key: ");
                             let[1] = bufferReader.readLine();
                             sw.loadData(let[0], let[1]);
-                            System.out.println(sw.toString()+"\n\n Archive successfuly loaded! ..");
+                            System.out.print(sw.toString()+"\n\n Archive successfuly loaded! ..");
+                            let[3] = bufferReader.readLine();
+                            resetBuffer(let);
                             break;
                     case 0:
                             start = 1;
                             break;
                     default:
+                            System.out.print("Wrong selection, retry.. ");
+                            let[3] = bufferReader.readLine();
+                            resetBuffer(let);
                             break;
                 }
             }
