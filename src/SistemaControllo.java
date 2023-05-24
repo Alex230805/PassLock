@@ -39,9 +39,7 @@ public class SistemaControllo {
                 registro.add(current,c);
                 registroChiavi.add(current,secretKey);
                 stop = true;
-                current++;
-                //manca l'ordinamento
-                
+                current++;            
             } 
         }catch(NoSuchAlgorithmException ex){
             throw ex;
@@ -51,7 +49,7 @@ public class SistemaControllo {
         
     }
 
-    //metodo per eliminare un nodo//manca l'ordinamento
+    //metodo per eliminare un nodo
 
     public void deleteNode(int i){
         registro.remove(i);
@@ -62,7 +60,6 @@ public class SistemaControllo {
     }
 
     //metodo per verificare la libertà di una cella
-
 
     public boolean isFree(int i){
         if(registro.get(i) != null){
@@ -112,7 +109,7 @@ public class SistemaControllo {
         return registro.size();
     }
 
-    //metodo per caricare dei dati dai file separati, implementare la serializzazione
+    //metodo per caricare dei dati dai file separati, migliorato per evitare problemi di casting relativi alla sicurezza
     public void loadData(String destinationFile_1, String destinationFile_2) throws ClassNotFoundException,FileNotFoundException,IOException{
         cella[] cache;
         SecretKey[] cacheKey;
