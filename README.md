@@ -1,11 +1,7 @@
----
-data: 07/05/2023
-author: Alessandro M
-description: toDo list di cose da aggiungere e appunti
----
 
 
-#Cose da aggiungere che mancano:
+
+#Cose da aggiungere :
 
 3 - Manca l'ordinamento della lista quando si aggiunge qualcosa, quando la si elimina e quando si sposta o modifica
 
