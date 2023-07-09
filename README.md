@@ -13,10 +13,10 @@
 
 ##--- Idee future da implem,entare ---
 
-Sostituire all'uso della lista un'albero binario
-
+Meglio un'albero binario che una lista
 
 Miglior criptazione dei dati.
+
 Quando i dati vendgono scritti su disco dovrebbero essere criptati a loro volta, e archiviati in una posizione specifica nella home dell'utente.
 
 
