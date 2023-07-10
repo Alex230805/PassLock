@@ -11,7 +11,7 @@
         \-->> Implementare un'algoritmo di suddivisione del messaggio, riordinamento dei caratteri, cifratura a doppia chiave
 
 
-## --- Idee future da implem,entare ---
+## --- Idee future da implementare ---
 
 Meglio un'albero binario che una lista
 
