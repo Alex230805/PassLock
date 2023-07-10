@@ -1,7 +1,7 @@
 
 
 
-#Cose da aggiungere :
+# Cose da aggiungere :
 
 3 - Manca l'ordinamento della lista quando si aggiunge qualcosa, quando la si elimina e quando si sposta o modifica
 
@@ -11,7 +11,7 @@
         \-->> Implementare un'algoritmo di suddivisione del messaggio, riordinamento dei caratteri, cifratura a doppia chiave
 
 
-##--- Idee future da implem,entare ---
+## --- Idee future da implem,entare ---
 
 Meglio un'albero binario che una lista
 
