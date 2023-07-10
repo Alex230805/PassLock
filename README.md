@@ -5,10 +5,8 @@
 
 3 - Manca l'ordinamento della lista quando si aggiunge qualcosa, quando la si elimina e quando si sposta o modifica
 
-4 - aggiungere un layer di sicurezza di livello avanzato per un certo tipo di password, particolarmente sensibili
-        |
-        |
-        \-->> Implementare un'algoritmo di suddivisione del messaggio, riordinamento dei caratteri, cifratura a doppia chiave
+4 - aggiungere un layer di sicurezza di livello avanzato per un certo tipo di password particolarmente sensibili
+ - Implementare un'algoritmo di suddivisione del messaggio, riordinamento dei caratteri, cifratura a doppia chiave
 
 
 ## --- Idee future da implementare ---
